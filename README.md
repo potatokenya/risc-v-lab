@@ -7,7 +7,8 @@ backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.svg')
 ---
 ## Commands:
-	* riscv64-unknown-elf-gcc   -march=rv32i   -mabi=ilp32   -nostdlib   -Ttext=0x0   -o test_add.elf   test_add.s
+	* riscv64-unknown-elf-gcc   -march=rv32i   -mabi=ilp32   -nostdlib   -Ttext=0x0   -o test_add.elf   test_add.s    
+	# -march=rv32i = 32-bit ISA, -mabi=ilp32 = 32-bit ABI, Output ELF is RV32, not RV64.
 
   	* riscv64-unknown-elf-objdump -d test_add.elf
 
