@@ -6,7 +6,7 @@ paginate: true
 backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.svg')
 ---
-## Comands:
+## Commands:
 	* riscv64-unknown-elf-gcc   -march=rv32i   -mabi=ilp32   -nostdlib   -Ttext=0x0   -o test_add.elf   test_add.s
 
   	* riscv64-unknown-elf-objdump -d test_add.elf
