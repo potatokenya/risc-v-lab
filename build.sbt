@@ -1,16 +1,16 @@
-ThisBuild / scalaVersion := "2.13.12"
+scalaVersion := "2.12.13"
 
-ThisBuild / version := "0.1.0"
-ThisBuild / organization := "edu.dtu"
+scalacOptions ++= Seq(
+  "-feature",
+  "-language:reflectiveCalls",
+)
 
-lazy val root = (project in file("."))
-  .settings(
-    name := "riscv-cpu",
+// Chisel 3.5
+addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.6" cross CrossVersion.full)
+libraryDependencies += "edu.berkeley.cs" %% "chisel3" % "3.5.6"
+libraryDependencies += "edu.berkeley.cs" %% "chiseltest" % "0.5.6"
+libraryDependencies += "edu.berkeley.cs" % "ip-contributions" % "0.5.1"
 
-    libraryDependencies ++= Seq(
-      "edu.berkeley.cs" %% "chisel3" % "3.6.0",
-      "edu.berkeley.cs" %% "chiseltest" % "0.6.0"
-    )
-  )
+libraryDependencies += "net.fornwall" % "jelf" % "0.9.0"
 
 

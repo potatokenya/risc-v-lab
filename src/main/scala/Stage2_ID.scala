@@ -1,7 +1,7 @@
 import chisel3._
 import chisel3.util._
-import lib.ControlBus
 
+/*
 class Stage2_ID(fpga: Boolean) extends Module {
   val io = IO(new Bundle {
 
@@ -22,4 +22,4 @@ class Stage2_ID(fpga: Boolean) extends Module {
   // Output
 
 
-}
+} */
