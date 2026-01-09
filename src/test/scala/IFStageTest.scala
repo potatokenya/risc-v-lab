@@ -8,6 +8,10 @@ class IFStageTest extends AnyFlatSpec with ChiselScalatestTester {
 
     val FPGA = false
     val PROGRAM: Seq[Int] = Seq(
+      0x00700093, // addi x1, x0, 7
+      0x00508113,  // addi x2, x1, 5 (will fail until WB + forwarding)
+      0x00000013, // nop
+      0x00000013, // nop
       0x11100093, // addi x1, x0, 0x111
       0x22200113, // addi x2, x0, 0x222
       0x00000013, // nop
