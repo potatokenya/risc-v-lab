@@ -113,7 +113,6 @@ class Pipeline extends Module {
     weOut  := true.B
   }
 
-
   io.alu := aluOut
 
   // ---------------------------
@@ -147,10 +146,6 @@ class Pipeline extends Module {
   }
   val memWbReg = RegInit(0.U.asTypeOf(memWb))
 
-  //memWbReg.wbData := memWbData
-  //memWbReg.rd     := memWbRd
-  //memWbReg.we     := memWbWe
-
   memWbReg.wbData := exMemReg.aluOut
   memWbReg.rd     := exMemReg.rd
   memWbReg.we     := exMemReg.we
@@ -158,7 +153,7 @@ class Pipeline extends Module {
   // ---------------------------
   // WRITE BACK
   // ---------------------------
-  // Temporary direct writeback:
+  // Temporary direct write back:
   //regFile.io.rd := idExReg.rd
   //regFile.io.wd := aluOut
   //regFile.io.we := weOut
@@ -177,8 +172,6 @@ class Pipeline extends Module {
   io.dbg.imm    := imm_i
 
   io.dbg.idex_rs1val := idExReg.rs1Val
-  //io.dbg.alu_out     := aluOut
-  //io.dbg.we          := weOut
   io.dbg.alu_out := exMemReg.aluOut
   io.dbg.we      := exMemReg.we
 }
