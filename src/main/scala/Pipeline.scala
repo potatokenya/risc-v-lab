@@ -62,6 +62,7 @@ class Pipeline extends Module {
   val funct3 = ifIdReg.instr(14,12)
   val funct7 = ifIdReg.instr(31,25)
 
+
   val imm_i = Cat(Fill(20, ifIdReg.instr(31)), ifIdReg.instr(31,20))
 
   // Register File
