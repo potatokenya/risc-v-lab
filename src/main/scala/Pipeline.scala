@@ -113,6 +113,8 @@ class Pipeline extends Module {
     weOut  := true.B
   }
 
+  // enya work
+
   io.alu := aluOut
 
   // ---------------------------
