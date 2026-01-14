@@ -57,9 +57,10 @@ class Pipeline extends Module {
   // ---------------------------
   val opcode = ifIdReg.instr(6,0)
   val rd     = ifIdReg.instr(11,7)
-  val funct3 = ifIdReg.instr(14,12)
   val rs1    = ifIdReg.instr(19,15)
   val rs2    = ifIdReg.instr(24,20)
+  val funct3 = ifIdReg.instr(14,12)
+  val funct7 = ifIdReg.instr(31,25)
 
   val imm_i = Cat(Fill(20, ifIdReg.instr(31)), ifIdReg.instr(31,20))
 
@@ -85,6 +86,7 @@ class Pipeline extends Module {
     val rd     = UInt(5.W)
     val opcode = UInt(7.W)
     val funct3 = UInt(3.W)
+    val funct7 = UInt(7.W)
   }
   val idExReg = RegInit(0.U.asTypeOf(idEx))
 
@@ -94,6 +96,7 @@ class Pipeline extends Module {
   idExReg.rd     := rd
   idExReg.opcode := opcode
   idExReg.funct3 := funct3
+  idExReg.funct7 := funct7
 
   // ---------------------------
   // EX STAGE
@@ -105,11 +108,9 @@ class Pipeline extends Module {
   when(idExReg.opcode === "b0010011".U && idExReg.funct3 === "b000".U) {
     aluOut := idExReg.rs1Val + idExReg.imm
     weOut  := true.B
-  }
-
   // ADD (R-type)
-  when(idExReg.opcode === "b0110011".U && idExReg.funct3 === "b000".U) {
-    aluOut := idExReg.rs1Val + idExReg.rs2Val   // rs2 value
+  }.elsewhen(idExReg.opcode === "b0110011".U && idExReg.funct3 === "b000".U) {
+    aluOut := idExReg.rs1Val + idExReg.rs2Val
     weOut  := true.B
   }
 
