@@ -10,9 +10,14 @@ class RegisterFile extends Module {
 
     val rd1 = Output(UInt(32.W))   // Read data from rs1
     val rd2 = Output(UInt(32.W))   // Read data from rs2
+
+    // Debug: read any register by index
+    val dbg_addr = Input(UInt(5.W))
+    val dbg_data = Output(UInt(32.W))
   })
   // Register file storage
   val regs = RegInit(VecInit(Seq.fill(32)(0.U(32.W))))
+
 
   // Reading from registers
   // Combination reads (x0 always reads as zero)
@@ -23,4 +28,8 @@ class RegisterFile extends Module {
   when (io.we && io.rd =/= 0.U) {
     regs(io.rd) := io.wd
   }
+
+  // Debug read
+  io.dbg_data := Mux(io.dbg_addr.orR, regs(io.dbg_addr), 0.U)
+
 }
