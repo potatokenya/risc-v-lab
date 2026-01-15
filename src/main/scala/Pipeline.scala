@@ -62,7 +62,6 @@ class Pipeline extends Module {
   val funct3 = ifIdReg.instr(14,12)
   val funct7 = ifIdReg.instr(31,25)
 
-
   val imm_i = Cat(Fill(20, ifIdReg.instr(31)), ifIdReg.instr(31,20))
 
   // Register File
@@ -105,14 +104,40 @@ class Pipeline extends Module {
   val aluOut = WireDefault(0.U(32.W))
   val weOut  = WireDefault(false.B)
 
+  // control signals for MEM stage
+  val isLoad  = WireDefault(false.B)
+  val isStore = WireDefault(false.B)
+
   // ADDI
   when(idExReg.opcode === "b0010011".U && idExReg.funct3 === "b000".U) {
+    // ADDI
     aluOut := idExReg.rs1Val + idExReg.imm
     weOut  := true.B
-  // ADD (R-type)
-  }.elsewhen(idExReg.opcode === "b0110011".U && idExReg.funct3 === "b000".U) {
-    aluOut := idExReg.rs1Val + idExReg.rs2Val
-    weOut  := true.B
+
+  }.elsewhen(idExReg.opcode === "b0110011".U) {
+    // R-type
+    weOut := true.B
+    switch(idExReg.funct3) {
+      is("b000".U) {
+        when(idExReg.funct7 === "b0000000".U) { aluOut := idExReg.rs1Val + idExReg.rs2Val } // ADD
+          .elsewhen(idExReg.funct7 === "b0100000".U) { aluOut := idExReg.rs1Val - idExReg.rs2Val } // SUB
+      }
+      is("b111".U) { aluOut := idExReg.rs1Val & idExReg.rs2Val } // AND
+      is("b110".U) { aluOut := idExReg.rs1Val | idExReg.rs2Val } // OR
+      is("b100".U) { aluOut := idExReg.rs1Val ^ idExReg.rs2Val } // XOR
+    }
+
+  }.elsewhen(idExReg.opcode === "b0000011".U) {
+    // LOAD
+    aluOut  := idExReg.rs1Val + idExReg.imm   // effective address
+    weOut   := true.B                         // write back after MEM
+    isLoad  := true.B
+
+  }.elsewhen(idExReg.opcode === "b0100011".U) {
+    // STORE
+    aluOut   := idExReg.rs1Val + idExReg.imm  // effective address
+    weOut    := false.B                       // store does NOT write RF
+    isStore  := true.B
   }
 
   io.alu := aluOut
@@ -124,19 +149,38 @@ class Pipeline extends Module {
     val aluOut = UInt(32.W)
     val rd     = UInt(5.W)
     val we     = Bool()
+    val rs2Val  = UInt(32.W)   // store data
+    val isLoad  = Bool()
+    val isStore = Bool()
   }
   val exMemReg = RegInit(0.U.asTypeOf(exMem))
 
   exMemReg.aluOut := aluOut
   exMemReg.rd     := idExReg.rd
   exMemReg.we     := weOut
+  exMemReg.rs2Val  := idExReg.rs2Val
+  exMemReg.isLoad  := isLoad
+  exMemReg.isStore := isStore
 
   // ---------------------------
-  // MEM STAGE (temporary, just forwards ALU results)
+  // MEM STAGE
   // ---------------------------
-  val memWbData = exMemReg.aluOut
-  val memWbRd   = exMemReg.rd
-  val memWbWe   = exMemReg.we
+  val dmem = SyncReadMem(1024, UInt(32.W))
+  val memReadData = Wire(UInt(32.W))
+  memReadData := 0.U
+
+  when (exMemReg.isLoad) {
+    memReadData := dmem.read(exMemReg.aluOut(31,2))
+  }
+
+  when (exMemReg.isStore) {
+    dmem.write(exMemReg.aluOut(31,2), exMemReg.rs2Val)
+  }
+
+  // (temporary, just forwards ALU results)
+  //val memWbData = exMemReg.aluOut
+  //val memWbRd   = exMemReg.rd
+  //val memWbWe   = exMemReg.we
 
   // ---------------------------
   // MEM/WB PIPELINE REGISTER
@@ -148,7 +192,8 @@ class Pipeline extends Module {
   }
   val memWbReg = RegInit(0.U.asTypeOf(memWb))
 
-  memWbReg.wbData := exMemReg.aluOut
+  //memWbReg.wbData := exMemReg.aluOut
+  memWbReg.wbData := Mux(exMemReg.isLoad, memReadData, exMemReg.aluOut)
   memWbReg.rd     := exMemReg.rd
   memWbReg.we     := exMemReg.we
 
