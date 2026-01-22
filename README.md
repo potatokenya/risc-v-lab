@@ -13,6 +13,14 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
   	* riscv64-unknown-elf-objdump -d test_add.elf
 
+	
+
+	* riscv64-unknown-elf-as -march=rv32i test_LW_SW.s -o test_LwSw.o
+
+	* riscv64-unknown-elf-objcopy -O binary test_LwSw.o progLwSw.bin
+
+	* xxd -p -c 4 progLwSw.bin > progLwSw.hex
+
   	* sbt clean compile
 
   	* sbt test
