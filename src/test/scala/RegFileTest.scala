@@ -1,5 +1,6 @@
 import chisel3._
 import chiseltest._
+import old.RegisterFile
 import org.scalatest.flatspec.AnyFlatSpec
 
 class RegFileTest extends AnyFlatSpec with ChiselScalatestTester {

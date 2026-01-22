@@ -1,5 +1,6 @@
 import chisel3._
 import chiseltest._
+import old.Pipeline
 import org.scalatest.flatspec.AnyFlatSpec
 
 class ExecuteTest extends AnyFlatSpec with ChiselScalatestTester {

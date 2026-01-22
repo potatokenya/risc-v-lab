@@ -1,3 +1,5 @@
+package old
+
 import chisel3._
 import chisel3.util._
 import chisel3.util.experimental.loadMemoryFromFile
@@ -44,25 +46,13 @@ class Pipeline extends Module {
   }.elsewhen(!loadUseHazard) {
     pcReg := pcReg + 4.U
   }
-
   io.pc := pcReg
-
 
   val imem = SyncReadMem(1024, UInt(32.W))
   //loadMemoryFromFile(imem, "src/main/resources/program_add.hex")
   loadMemoryFromFile(imem, "assembly/program.hex")
   val instr = imem.read(pcReg(31,2))
   val instrReg = RegNext(instr)
-
-
-  /*
-  val b0 = imem.read(pcReg)
-  val b1 = imem.read(pcReg + 1.U)
-  val b2 = imem.read(pcReg + 2.U)
-  val b3 = imem.read(pcReg + 3.U)
-
-  val instr = Cat(b3, b2, b1, b0) */
-
 
   // Fetch
   io.instr := instrReg
@@ -230,9 +220,21 @@ class Pipeline extends Module {
   // ---------------------------
   // MEM STAGE
   // ---------------------------
+  val memStage = new Bundle {
+    val rd     = UInt(5.W)
+    val we     = Bool()
+    val isLoad = Bool()
+    val aluOut = UInt(32.W)
+  }
+  val memStageReg = RegInit(0.U.asTypeOf(memStage))
   val dmem = SyncReadMem(1024, UInt(32.W))
 
-  // Registered memory output
+  // capture control for memory
+  memStageReg.rd     := exMemReg.rd
+  memStageReg.we     := exMemReg.we
+  memStageReg.isLoad := exMemReg.isLoad
+  memStageReg.aluOut := exMemReg.aluOut
+
 
   // Issue read: data arrives next cycle
   val memOut = dmem.read(exMemReg.aluOut(31,2))
@@ -308,6 +310,6 @@ class Pipeline extends Module {
   io.dbg.we      := exMemReg.we
 
   printf(p"wbData: memWbReg.memOut=${memWbReg.memOut} memWbReg.aluOut=${memWbReg.aluOut}\n")
-  printf(p"memWB rd=${memWbReg.rd} data=${wbData} we=${memWbReg.we}\n")
+  printf(p"exmem rd=${exMemReg.rd}  memWB rd=${memWbReg.rd} data=${wbData} we=${memWbReg.we}\n")
   printf(p"rf_addr=${io.dbg.rf_addr} rf_data=${io.dbg.rf_data}\n")
 }

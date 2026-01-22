@@ -10,6 +10,9 @@ class Control extends Module {
     val memToReg = Output(Bool())
     val aluSrc = Output(Bool())
     val branch = Output(Bool())
+    val jump     = Output(Bool())   // JAL
+    val jumpReg  = Output(Bool())   // JALR
+    val wbSelPC4 = Output(Bool())   // write PC+4
   })
 
   io.regWrite := false.B
@@ -18,13 +21,25 @@ class Control extends Module {
   io.memToReg := false.B
   io.aluSrc := false.B
   io.branch := false.B
+  io.jump     := false.B
+  io.jumpReg  := false.B
+  io.wbSelPC4 := false.B
 
   switch(io.opcode) {
-    is("b0110011".U) { io.regWrite := true.B } // R-type
-    is("b0000011".U) { io.regWrite := true.B; io.memRead := true.B; io.memToReg := true.B; io.aluSrc := true.B } // Load
-    is("b0100011".U) { io.memWrite := true.B; io.aluSrc := true.B } // Store
-    is("b0010011".U) { io.regWrite := true.B; io.aluSrc := true.B } // I-type ALU
-    is("b1100011".U) { io.branch := true.B; io.aluSrc := false.B } // branch instruction
+    // R-type
+    is("b0110011".U) { io.regWrite := true.B }
+    // Load
+    is("b0000011".U) { io.regWrite := true.B; io.memRead := true.B; io.memToReg := true.B; io.aluSrc := true.B }
+    // Store
+    is("b0100011".U) { io.memWrite := true.B; io.aluSrc := true.B }
+    // I-type ALU
+    is("b0010011".U) { io.regWrite := true.B; io.aluSrc := true.B }
+    // branch instruction
+    is("b1100011".U) { io.branch := true.B; io.aluSrc := false.B }
+    // JAL
+    is("b1101111".U) { io.jump := true.B; io.regWrite := true.B; io.wbSelPC4 := true.B}
+    // JALR
+    is("b1100111".U) {io.jumpReg := true.B; io.regWrite := true.B; io.aluSrc := true.B; io.wbSelPC4 := true.B }
   }
 }
 
