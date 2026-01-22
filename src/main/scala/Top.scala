@@ -1,7 +1,14 @@
 import chisel3._
 import chisel3.util._
-import lib.peripherals.{MemoryMappedUart, StringStreamer}
+import lib.peripherals.{MemoryMappedLeds, MemoryMappedUart, StringStreamer}
 import lib.peripherals.MemoryMappedUart.UartPins
+
+object Top extends App {
+  emitVerilog(
+    new Top("assembly/hello_world.hex"),
+    Array("--target-dir", "generated")
+  )
+}
 
 class Top(file: String) extends Module {
   val io = IO(new Bundle {
