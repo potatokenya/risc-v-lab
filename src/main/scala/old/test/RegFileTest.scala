@@ -1,3 +1,5 @@
+package old.test
+
 import chisel3._
 import chiseltest._
 import old.RegisterFile

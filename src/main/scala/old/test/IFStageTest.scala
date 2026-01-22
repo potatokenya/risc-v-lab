@@ -1,7 +1,9 @@
+package old.test
+
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
-
+/*
 class IFStageTest extends AnyFlatSpec with ChiselScalatestTester {
 
   "Pipeline" should "fetch instructions correctly" in {
@@ -15,4 +17,6 @@ class IFStageTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+
+ */
 

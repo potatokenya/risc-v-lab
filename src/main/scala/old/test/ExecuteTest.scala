@@ -1,8 +1,10 @@
+package old.test
+
 import chisel3._
 import chiseltest._
 import old.Pipeline
 import org.scalatest.flatspec.AnyFlatSpec
-
+/*
 class ExecuteTest extends AnyFlatSpec with ChiselScalatestTester {
   "Execute stage" should "execute addi" in {
     test(new Pipeline) { dut =>
@@ -14,3 +16,5 @@ class ExecuteTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+
+ */

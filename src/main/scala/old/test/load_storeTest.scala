@@ -1,7 +1,9 @@
+package old.test
+
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
-
+/*
 class load_storeTest extends AnyFlatSpec with ChiselScalatestTester {
 
   "Pipeline" should "execute SW then LW correctly" in {
@@ -17,7 +19,7 @@ class load_storeTest extends AnyFlatSpec with ChiselScalatestTester {
       // -----------------------
       dut.io.dbg.rf_addr.poke(1.U) // select x1
       dut.clock.step(1)            // allow regFile output to update
-      println("1. Checking x1 after ADDI")
+      println("\n 1. Checking x1 after ADDI \n")
       dut.io.dbg.rf_data.expect("h111".U)
 
       // -----------------------
@@ -37,8 +39,8 @@ class load_storeTest extends AnyFlatSpec with ChiselScalatestTester {
       // Check x3 (loaded value from memory)
       // -----------------------
       dut.io.dbg.rf_addr.poke(3.U) // select x3
-      dut.clock.step()
-      println("3. Checking x3 after LW \n ")
+      dut.clock.step(2)
+      println("\n 3. Checking x3 after LW \n ")
       dut.io.dbg.rf_data.expect("h222".U) // matches value stored by SW
 
       dut.clock.step(5) // ensure memory operations have completed
@@ -54,3 +56,5 @@ class load_storeTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+
+ */

@@ -8,7 +8,6 @@ class IFID extends Bundle {
   val pc = UInt(32.W)
   val instr = UInt(32.W)
 }
-
 class IDEX extends Bundle {
   val pc = UInt(32.W)
   val rs1 = UInt(5.W)
@@ -16,10 +15,13 @@ class IDEX extends Bundle {
   val rd = UInt(5.W)
   val funct3 = UInt(3.W)
   val funct7 = UInt(7.W)
-  val imm = UInt(32.W)
+  val imm = SInt(32.W)
   val opcode = UInt(7.W)
   val regData1 = UInt(32.W)
   val regData2 = UInt(32.W)
+  val jump     = Bool()
+  val jumpReg  = Bool()
+  val wbSelPC4 = Bool()
 
   // Control signals
   val aluSrc = Bool()
@@ -40,6 +42,10 @@ class EXMEM extends Bundle {
   val memToReg = Bool()
   val branchTaken = Bool()
   val branchTarget = UInt(32.W)
+  val pcPlus4  = UInt(32.W)
+  val jumpTaken = Bool()
+  val jumpTarget = UInt(32.W)
+  val wbSelPC4 = Bool()
 }
 
 class MEMWB extends Bundle {
@@ -48,4 +54,6 @@ class MEMWB extends Bundle {
   val rd = UInt(5.W)
   val regWrite = Bool()
   val memToReg = Bool()
+  val pcPlus4  = UInt(32.W)
+  val wbSelPC4 = Bool()
 }
