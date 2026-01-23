@@ -17,7 +17,6 @@ class MemoryMappedLeds(cnt: Int) extends Module {
   assert(cnt <= 32, "Only up to 32 LEDs can be controlled through the bus")
 
   val io = IO(new Bundle {
-
     /** bus port */
     val port = Bus.RespondPort()
 

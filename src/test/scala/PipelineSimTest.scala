@@ -3,7 +3,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 class PipelineSimTest extends AnyFlatSpec with ChiselScalatestTester {
   "PipelineCPU" should "run program from hex file and print registers" in {
-    test(new Top("assembly/program.hex")).withAnnotations(Seq(WriteVcdAnnotation)) { dut =>
+    test(new Top("assembly/Led_test.hex")).withAnnotations(Seq(WriteVcdAnnotation)) { dut =>
 
       val maxCycles = 100
       for (i <- 0 until maxCycles) {

@@ -18,6 +18,7 @@ class Control extends Module {
     val jump     = Output(Bool())   // JAL
     val jumpReg  = Output(Bool())   // JALR
     val wbSelPC4 = Output(Bool())   // write PC+4
+
   })
 
   // defaults
