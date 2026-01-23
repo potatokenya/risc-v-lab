@@ -63,17 +63,25 @@ class Top(file: String) extends Module {
   // IF Stage
   // =========================================================
   imem.io.addr := pc
+
+  // Hold IF/ID by default
+  ifid.pc    := ifid.pc
+  ifid.instr := ifid.instr
+
+  imem.io.addr := pc
+
   pcNext := pc + 4.U
   when(exmem.branchTaken) { pcNext := exmem.branchTarget }
   when(exmem.jumpTaken)   { pcNext := exmem.jumpTarget }
 
   when(exmem.branchTaken || exmem.jumpTaken) {
-    ifid := 0.U.asTypeOf(new IFID)
-    pc := pcNext
+    ifid.pc    := 0.U
+    ifid.instr := 0.U
+    pc         := pcNext
   }.elsewhen(!stall) {
-    pc := pcNext
-    ifid.pc := pc
-    ifid.instr := imem.io.instr
+    pc         := pcNext
+    ifid.pc    := pc
+    ifid.instr := imem.io.instr   // <-- this must always be reachable
   }
 
   // =========================================================
@@ -252,7 +260,8 @@ class Top(file: String) extends Module {
   val blink = blinkCounter(25)
 
   //io.led := mmLeds.io.pins | Fill(8, blink)
-  io.led := mmLeds.io.pins
+  //io.led := mmLeds.io.pins
+  io.led := imem.io.instr(7,0)
 
 
   // =========================================================
