@@ -9,11 +9,11 @@ class InstrMem(file: String) extends Module {
     val instr = Output(UInt(32.W))
   })
 
-  val mem = SyncReadMem(1024, UInt(32.W))
+  val mem = Mem(1024, UInt(32.W))
   loadMemoryFromFileInline(mem, file)
 
-  val rd = mem.read(io.addr(31,2), true.B)
-  io.instr := RegNext(rd, 0.U)
+  io.instr := mem(io.addr(31,2))
+
 }
 
 class DataMem extends Module {
